@@ -73,7 +73,7 @@ const sslOptions = {
     key: fs.readFileSync('./cert/server.key'),
     cert: fs.readFileSync('./cert/server.cert')
 };
-
-https.createServer(sslOptions, app).listen(8080, () => {
-    console.log("Servidor rodando em https://localhost:8080");
+const PORT = process.env.PORT ?? 8080;
+https.createServer(sslOptions, app).listen(PORT, () => {
+    console.log(`Servidor rodando em https://localhost:${PORT}`);
 });

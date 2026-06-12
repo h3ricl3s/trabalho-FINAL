@@ -23,7 +23,7 @@ app.use(express.json()); // para interpretar o corpo das requisições como JSON
 
 // liberta o front-end de aceder ao back-end
 app.use(cors({
-    origin: ["https://trabalho-final-kappa-one.vercel.app/"],
+    origin: ["https://trabalho-final-kappa-one.vercel.app"],
     credentials: true,
     allowedHeaders: ["Content-Type", "authorization"],
 }));

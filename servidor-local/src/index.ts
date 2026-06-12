@@ -69,11 +69,21 @@ app.use("/graphql", expressMiddleware(graphqlServer, {
 }))
 
 // inicia o servidor na porta 8080 com SSL
-const sslOptions = {
-    key: fs.readFileSync('./cert/server.key'),
-    cert: fs.readFileSync('./cert/server.cert')
-};
 
-https.createServer(sslOptions, app).listen(8080, () => {
-    console.log("Servidor rodando em https://localhost:8080");
-});
+const PORT = process.env.PORT ?? 8080;
+
+if (process.env.NODE_ENV === "development") {
+    const sslOptions = {
+        key: fs.readFileSync('./cert/server.key'),
+        cert: fs.readFileSync('./cert/server.cert')
+    };
+
+    https.createServer(sslOptions, app).listen(PORT, () => {
+        console.log(`Servidor rodando em https://localhost:${PORT}`);
+    });
+
+} else {
+    app.listen(PORT, () => {
+        console.log(`Servidor rodando em http://localhost:${PORT}`);
+    });
+}

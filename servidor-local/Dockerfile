@@ -1,24 +1,43 @@
-# 1. Especifica  versao de sistema operacional base
-FROM node:20-alpine
+# ---- Stage 1: Build ----
+FROM node:22-alpine AS build
 
-# 2. Define a pasta onde o codigo vai ser executado
 WORKDIR /app
 
+# Copy package files
+COPY package.json package-lock.json* ./
 
+# Install ALL dependencies (including devDependencies for tsc + @types)
+RUN npm ci || npm install
 
+# Copy source code and tsconfig
+COPY tsconfig.json ./
+COPY src ./src
 
-# 3. Copia os arquivos package.json e package-lock.json para a pasta /app
-COPY package*.json ./
-
-# 4. Instala as dependencias
-RUN npm install
-
+# Compile TypeScript to JavaScript
 RUN npm run build
-# 5. Copia o código-fonte para a pasta /app
-COPY . .
 
-# 6. Informar a porta que a aplicacao vai usar
-#EXPOSE 8080
+# ---- Stage 2: Production ----
+FROM node:22-alpine
 
-# 7. Comando para executar a aplicação em modo de desenvolvimento
-CMD ["npm", "run", "start"]
+# Security: run as non-root user
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+
+WORKDIR /app
+
+# Copy package files
+COPY package.json package-lock.json* ./
+
+# Install only production dependencies
+RUN npm ci --omit=dev || npm install --omit=dev
+
+# Copy compiled output from build stage
+COPY --from=build /app/dist ./dist
+
+# Set ownership and switch to non-root user
+RUN chown -R appuser:appgroup /app
+USER appuser
+
+# Set environment
+ENV NODE_ENV=production
+
+CMD ["node", "dist/index.js"]

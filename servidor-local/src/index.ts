@@ -27,6 +27,7 @@ app.use(cors({
     origin: ["http://localhost:3000","https://trabalho-final-kappa-one.vercel.app/", "https://trabalho-final-dev.vercel.app/", "https://trabalho-final-1.onrender.com"],
     credentials: true,
     allowedHeaders: ["Content-Type", "authorization"],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
 }));
 
 

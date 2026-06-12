@@ -4,6 +4,9 @@ FROM node:20-alpine
 # 2. Define a pasta onde o codigo vai ser executado
 WORKDIR /app
 
+
+
+
 # 3. Copia os arquivos package.json e package-lock.json para a pasta /app
 COPY package*.json ./
 

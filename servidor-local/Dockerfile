@@ -11,6 +11,8 @@ WORKDIR /app
 COPY package*.json ./
 
 # 4. Instala as dependencias
+RUN npm install
+
 RUN npm run build
 # 5. Copia o código-fonte para a pasta /app
 COPY . .

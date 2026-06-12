@@ -16,6 +16,7 @@ import swaggerUi from "swagger-ui-express"
 import { ApolloServer } from "@apollo/server";
 import { resolvers, typeDefs } from "./graphql/index.js";
 import { expressMiddleware } from "@as-integrations/express5";
+import { initDatabase } from "./lib/init-db.js";
 
 const app = express();
 
@@ -69,6 +70,7 @@ app.use("/graphql", expressMiddleware(graphqlServer, {
 }))
 
 // inicia o servidor na porta 8080 com SSL
+await initDatabase();
 
 const PORT = process.env.PORT ?? 8080;
 
